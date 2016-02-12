@@ -1,5 +1,7 @@
 ﻿module Sort1.SortFile
 
+// FIX: Licence information and push to GitHub
+// FIX: http://www.appveyor.com/
 // FIX: More unit tests (incl. edge cases)
 // FIX: Error handling (create unit tests with error cases)
 // FIX: Test duplicate, incomplete and empty lines.
