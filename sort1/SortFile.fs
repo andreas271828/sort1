@@ -20,7 +20,7 @@ module Sort1.SortFile
 
 open System
 
-type Line =
+type Line = 
     | Empty
     | Invalid
     | Data of string * string * int
@@ -33,9 +33,14 @@ let outputPath inputPath =
 
 let parseLine (line : string) = 
     let splitLine = line.Split [| ',' |]
+    
+    let parse l f s = 
+        try 
+            Line.Data(l, f, Int32.Parse s)
+        with :? FormatException -> Line.Invalid
     match splitLine.Length with
-    | 0 -> Line.Empty
-    | 3 -> Line.Data (splitLine.[0].Trim(), splitLine.[1].Trim(), Int32.Parse splitLine.[2])
+    | 1 when String.IsNullOrWhiteSpace splitLine.[0] -> Line.Empty
+    | 3 -> parse (splitLine.[0].Trim()) (splitLine.[1].Trim()) (splitLine.[2].Trim())
     | _ -> Line.Invalid
 
 let compareLines line1 line2 = 
@@ -49,12 +54,16 @@ let compareLines line1 line2 =
         | _ -> l
 
 let processLines lines = 
-    let isData = function
+    let isData = 
+        function 
         | Line.Data(_, _, _) -> true
         | _ -> false
-    let getData = function
+    
+    let getData = 
+        function 
         | Line.Data(l, f, s) -> (l, f, s)
         | _ -> failwith "No data to extract."
+    
     let printLine (l, f, s) = sprintf "%s, %s, %i" l f s
     lines
     |> Seq.map parseLine

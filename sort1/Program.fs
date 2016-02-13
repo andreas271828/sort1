@@ -16,11 +16,14 @@ General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************)
-// FIX: if line is in wrong format fail softly
-// FIX: Print information in console.
 [<EntryPoint>]
 let main args = 
+    let runWithMessages file =
+        printfn "Sorting \"%s\"." file
+        Sort1.SortFile.run file
+        printfn "Finished sorting."
+        printfn "Created \"%s\"." (Sort1.SortFile.outputPath file)
     match args.Length with
-    | 1 -> Sort1.SortFile.run args.[0]
+    | 1 -> runWithMessages args.[0]
     | _ -> printfn "Usage: sort1.exe <input file>"
     0

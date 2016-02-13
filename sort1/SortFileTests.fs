@@ -35,7 +35,11 @@ type SortFileTests() =
     
     static member ParseLineData = 
         [| ("HUEMER, ANDREAS, 42", SortFile.Line.Data("HUEMER", "ANDREAS", 42))
-           ("HUEMER,    ANDREAS,42", SortFile.Line.Data("HUEMER", "ANDREAS", 42)) |]
+           ("HUEMER,    ANDREAS,42", SortFile.Line.Data("HUEMER", "ANDREAS", 42))
+           ("", SortFile.Line.Empty)
+           ("   ", SortFile.Line.Empty)
+           ("x, y", SortFile.Line.Invalid)
+           ("x, y, z", SortFile.Line.Invalid) |]
     
     [<TestCaseSource("ParseLineData")>]
     static member parseLine parseLineData = 
