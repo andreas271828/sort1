@@ -25,7 +25,9 @@ module Sort1.SortFile
 open System
 
 let outputPath inputPath = 
-    let p = IO.Path.GetFileNameWithoutExtension inputPath
+    let ext = IO.Path.GetExtension inputPath
+    let n = inputPath.Length - ext.Length
+    let p = inputPath.Substring(0, n)
     p + "-sorted.txt"
 
 let parseLine (line : string) = 
