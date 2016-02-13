@@ -22,10 +22,6 @@ module Sort1.SortFile
 // FIX: Error handling (create unit tests with error cases)
 // FIX: Test duplicate, incomplete and empty lines.
 // FIX: Print information in console.
-// FIX: Get NUnit 3.0.1 working in MonoDevelop, make MonoDevelop install NUnit 2.6.3
-// or find NUnit 3.0.1 console to be able to compile and run NUnit [<TestCase>].
-// [<TestCase(1, 1)>]
-// let sameSame input expected = input
 open System
 
 let outputPath inputPath = 

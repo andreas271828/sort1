@@ -34,6 +34,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="SortFile.fs" />
     <Compile Include="SortFileTests.fs" />
+    <Compile Include="SortFileTests2.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
