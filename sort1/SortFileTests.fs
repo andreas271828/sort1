@@ -29,7 +29,8 @@ type SortFileTests() =
     [<TestCase("/tmp/test.txt", "/tmp/test-sorted.txt")>]
     [<TestCase("../../test.txt", "../../test-sorted.txt")>]
     [<TestCase("C:/tmp/test.txt", "C:/tmp/test-sorted.txt")>]
-    [<TestCase("C:\tmp\test.txt", "C:\tmp\test-sorted.txt")>]
+    [<TestCase("C:\\tmp\\test.txt", @"C:\tmp\test-sorted.txt")>]
+    [<TestCase(@"C:\tmp\test.txt", @"C:\tmp\test-sorted.txt")>]
     static member outputPath input expected = Assert.AreEqual(expected, SortFile.outputPath input)
     
     static member ParseLineData = 
