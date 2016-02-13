@@ -50,7 +50,8 @@ let processLines lines =
     let printLine (l, f, s) = sprintf "%s, %s, %i" l f s
     lines
     |> Seq.map parseLine
-    |> Seq.sortWith compareLines
-    |> Seq.map printLine
+    |> Seq.toArray
+    |> Array.sortWith compareLines
+    |> Array.map printLine
 
 let run inputPath = IO.File.WriteAllLines(outputPath inputPath, processLines (IO.File.ReadLines inputPath))
