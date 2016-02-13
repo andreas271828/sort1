@@ -16,10 +16,11 @@ General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************)
-// FIX: if args.Length != 1 print usage
 // FIX: if line is in wrong format fail softly
 // FIX: Print information in console.
 [<EntryPoint>]
 let main args = 
-    Sort1.SortFile.run args.[0]
+    match args.Length with
+    | 1 -> Sort1.SortFile.run args.[0]
+    | _ -> printfn "Usage: sort1.exe <input file>"
     0
