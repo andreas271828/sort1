@@ -18,11 +18,12 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 ********************************************************************)
 module Sort1.SortFile
 
-// FIX: More unit tests (incl. edge cases)
-// FIX: Error handling (create unit tests with error cases)
-// FIX: Test duplicate, incomplete and empty lines.
-// FIX: Print information in console.
 open System
+
+type Line =
+    | Empty
+    | Invalid
+    | Data of string * string * int
 
 let outputPath inputPath = 
     let ext = IO.Path.GetExtension inputPath
@@ -32,7 +33,10 @@ let outputPath inputPath =
 
 let parseLine (line : string) = 
     let splitLine = line.Split [| ',' |]
-    (splitLine.[0].Trim(), splitLine.[1].Trim(), Int32.Parse splitLine.[2])
+    match splitLine.Length with
+    | 0 -> Line.Empty
+    | 3 -> Line.Data (splitLine.[0].Trim(), splitLine.[1].Trim(), Int32.Parse splitLine.[2])
+    | _ -> Line.Invalid
 
 let compareLines line1 line2 = 
     match (line1, line2) with
@@ -45,9 +49,17 @@ let compareLines line1 line2 =
         | _ -> l
 
 let processLines lines = 
+    let isData = function
+        | Line.Data(_, _, _) -> true
+        | _ -> false
+    let getData = function
+        | Line.Data(l, f, s) -> (l, f, s)
+        | _ -> failwith "No data to extract."
     let printLine (l, f, s) = sprintf "%s, %s, %i" l f s
     lines
     |> Seq.map parseLine
+    |> Seq.filter isData
+    |> Seq.map getData
     |> Seq.toArray
     |> Array.sortWith compareLines
     |> Array.map printLine

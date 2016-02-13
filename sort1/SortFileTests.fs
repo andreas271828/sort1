@@ -33,8 +33,8 @@ type SortFileTests() =
     static member outputPath input expected = Assert.AreEqual(expected, SortFile.outputPath input)
     
     static member ParseLineData = 
-        [| ("HUEMER, ANDREAS, 42", ("HUEMER", "ANDREAS", 42))
-           ("HUEMER,    ANDREAS,42", ("HUEMER", "ANDREAS", 42)) |]
+        [| ("HUEMER, ANDREAS, 42", SortFile.Line.Data("HUEMER", "ANDREAS", 42))
+           ("HUEMER,    ANDREAS,42", SortFile.Line.Data("HUEMER", "ANDREAS", 42)) |]
     
     [<TestCaseSource("ParseLineData")>]
     static member parseLine parseLineData = 
@@ -42,8 +42,17 @@ type SortFileTests() =
         Assert.AreEqual(expected, SortFile.parseLine input)
     
     static member CompareLinesData = 
-        [| (("HUEMER", "ANDREAS", 42), ("HUEMER", "ANDREAS", 42), 0)
-           (("HUEMER", "ANDREAS", 52), ("HUEMER", "ANDREAS", 42), -1) |]
+        [| (("xxx", "yyy", 42), ("xxx", "yyy", 42), 0)
+           (("xxx", "yyy", 42), ("xxx", "yy", 42), 1)
+           (("xxx", "yyy", 42), ("xxx", "zzz", 42), -1)
+           (("xxx", "zzz", 42), ("xxx", "yyy", 42), 1)
+           (("xxx", "yyy", 42), ("x", "yyy", 42), 1)
+           (("xxx", "yyy", 42), ("y", "yyy", 42), -1)
+           (("xxx", "yyy", 42), ("y", "x", 42), -1)
+           (("y", "x", 42), ("xxx", "yyy", 42), 1)
+           (("xxx", "yyy", 42), ("xxx", "yyy", 52), 1)
+           (("xxx", "yyy", 42), ("aaa", "aaa", 52), 1)
+           (("aaa", "aaa", 52), ("xxx", "yyy", 42), -1) |]
     
     [<TestCaseSource("CompareLinesData")>]
     static member parseLine compareLinesData = 
@@ -51,12 +60,16 @@ type SortFileTests() =
         Assert.AreEqual(expected, SortFile.compareLines line1 line2)
     
     static member ProcessLinesData = 
-        let input1 = [| "HUEMER, ANDREAS, 42"; "HUEMER, ANDREAS, 42" |]
-        let expected1 = [| "HUEMER, ANDREAS, 42"; "HUEMER, ANDREAS, 42" |]
-        let input2 = [| "HUEMER, ANDREAS, 42"; "HUEMER, ANDREAS, 45" |]
-        let expected2 = [| "HUEMER, ANDREAS, 45"; "HUEMER, ANDREAS, 42" |]
-        [| (input1, expected1)
-           (input2, expected2) |]
+        [| ([||], [||])
+           ([| "x, y, 42"; "x, y, 42" |], [| "x, y, 42"; "x, y, 42" |])
+           ([| "x, y, 42"; "x, y, 45" |], [| "x, y, 45"; "x, y, 42" |])
+           ([| "x, y, 45"; "x, y, 42" |], [| "x, y, 45"; "x, y, 42" |])
+           ([| "x, y, 45"; "x, y, 42"; "x, y, 45" |], [| "x, y, 45"; "x, y, 45"; "x, y, 42" |])
+           ([| "x, y, 42"; ""; "x, y, 45" |], [| "x, y, 45"; "x, y, 42" |])
+           ([| "x, y"; "hello"; "x, y, 45"; "1, 2, 3, 4, 5" |], [| "x, y, 45" |])
+           
+           ([| "BUNDY, TERESSA, 88"; "SMITH, ALLAN, 70"; "KING, MADISON, 88"; "SMITH, FRANCIS, 85"; "SMITH, ERIN, 85" |], 
+            [| "BUNDY, TERESSA, 88"; "KING, MADISON, 88"; "SMITH, ERIN, 85"; "SMITH, FRANCIS, 85"; "SMITH, ALLAN, 70" |]) |]
     
     [<TestCaseSource("ProcessLinesData")>]
     static member processLines (processLinesData : string [] * string []) = 
